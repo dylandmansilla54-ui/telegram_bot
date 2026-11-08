@@ -97,21 +97,20 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, save_text_note))
     app.add_handler(MessageHandler(filters.Document.ALL, handle_document))
     
-    print("🤖 Iniciando bot en la nube con Webhooks...")
+    print("🤖 Iniciando bot en la nube con Webhooks automáticos...")
     
-    # Configuración del bucle de eventos para evitar errores en Render
+    # Manejo de bucle de eventos para Python 3.14+
     try:
         loop = asyncio.get_event_loop()
     except RuntimeError:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
-    # Arrancar el bot escuchando mediante Webhooks para Render
+    # Webhook simplificado que configura la URL automáticamente
     app.run_webhook(
         listen="0.0.0.0",
         port=PORT,
-        secret_token="mi_token_secreto_seguro",
-        webhook_url=f"{RENDER_EXTERNAL_URL}/{TOKEN}"
+        webhook_url=f"{RENDER_EXTERNAL_URL}/"
     )
 
 if __name__ == "__main__":
