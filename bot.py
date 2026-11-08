@@ -1,5 +1,6 @@
 import os
 import logging
+import asyncio
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters
 
@@ -85,7 +86,6 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     TOKEN = os.environ.get("TOKEN")
     PORT = int(os.environ.get("PORT", "8443"))
-    # Render asigna una URL pública automática a tu servicio web
     RENDER_EXTERNAL_URL = os.environ.get("RENDER_EXTERNAL_URL")
 
     app = ApplicationBuilder().token(TOKEN).build()
@@ -99,6 +99,13 @@ def main():
     
     print("🤖 Iniciando bot en la nube con Webhooks...")
     
+    # Configuración del bucle de eventos para evitar errores en Render
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
     # Arrancar el bot escuchando mediante Webhooks para Render
     app.run_webhook(
         listen="0.0.0.0",
